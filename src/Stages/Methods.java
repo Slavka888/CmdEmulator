@@ -1,6 +1,7 @@
 package Stages;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -71,6 +72,9 @@ public class Methods {
                 String command = commandParts.get(0);
                 List<String> commandArgs = commandParts.subList(1, commandParts.size());
                 System.out.println(command + " " + String.join(" ", commandArgs));
+                if (command.toLowerCase().equals("exit")){
+                    System.exit(0);
+                }
             }
         } catch (IOException e){
             System.out.println("Can't read script: " + e.getMessage());

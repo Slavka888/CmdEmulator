@@ -51,7 +51,7 @@ public class Emulator {
 //                System.exit(1);
                 break;
         }
-
+//        pathStartScript = "D:\\prog\\java\\ConfigProject\\CmdEmulator\\for_tasks\\script.txt";
         System.out.println("VFS path: " + pathVFS);
         System.out.println("StartScript path: " + pathStartScript);
 
