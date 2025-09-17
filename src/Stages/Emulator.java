@@ -15,7 +15,7 @@ public class Emulator {
         //обрабатываем аргументы командной строки
         switch (args.length){
             case 2:
-                if (args[0].equals("--vfs")) {
+                if (args[0].equals("--vfs") && !args[1].equals("--script")) {
                     pathVFS = args[1];
                     break;
                 }
@@ -24,7 +24,7 @@ public class Emulator {
                     System.exit(1);
                 }
             case 3:
-                if (args[0].equals("--vfs")) {
+                if (args[0].equals("--vfs") && args[2].equals("--script")) {
                     pathVFS = args[1];
                     System.out.println("StartScript not set");
                     break;
@@ -34,7 +34,7 @@ public class Emulator {
                     System.exit(1);
                 }
             case 4:
-                if (args[0].equals("--vfs")) {
+                if (args[0].equals("--vfs") && args[2].equals("--script")) {
                     pathVFS = args[1];
                 }
                 else {
@@ -48,10 +48,8 @@ public class Emulator {
                 break;
             default:
                 System.out.println("Unknown parameter");
-//                System.exit(1);
-                break;
+                System.exit(1);
         }
-//        pathStartScript = "D:\\prog\\java\\ConfigProject\\CmdEmulator\\for_tasks\\script.txt";
         System.out.println("VFS path: " + pathVFS);
         System.out.println("StartScript path: " + pathStartScript);
 
