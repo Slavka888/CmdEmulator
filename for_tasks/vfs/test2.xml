@@ -1,0 +1,10 @@
+<root>
+  <dir name="var">
+    <dir name="log">
+      <dir name="app">
+        <file name="error.log">RXJyb3IgbG9n<!-- base64 для "Error log" --></file>
+      </dir>
+      <file name="system.log">U3lzdGVtIGxvZw==<!-- base64 для "System log" --></file>
+    </dir>
+  </dir>
+</root>

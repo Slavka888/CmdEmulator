@@ -1,0 +1,4 @@
+ls
+cd /nonexistent
+ls "dir with space"
+exit

@@ -2,24 +2,31 @@ package Stages;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static Stages.Methods.*;
+
+//создание класса vfs
+class VFSNode {
+    String name;
+    boolean isDirectory;
+    Map<String, VFSNode> children = new HashMap<>();
+    byte[] content;//для файлов
+}
 
 public class Emulator {
     static String pathVFS;
     static String pathStartScript;
+    static VFSNode root = new VFSNode();
+
     public static void main(String[] args) {
         //обрабатываем аргументы командной строки
-        switch (args.length){
+        switch (args.length) {
             case 2:
                 if (args[0].equals("--vfs") && !args[1].equals("--script")) {
                     pathVFS = args[1];
                     break;
-                }
-                else {
+                } else {
                     System.out.println("VFS path not set");
                     System.exit(1);
                 }
@@ -28,16 +35,14 @@ public class Emulator {
                     pathVFS = args[1];
                     System.out.println("StartScript not set");
                     break;
-                }
-                else {
+                } else {
                     System.out.println("VFS path not set");
                     System.exit(1);
                 }
             case 4:
                 if (args[0].equals("--vfs") && args[2].equals("--script")) {
                     pathVFS = args[1];
-                }
-                else {
+                } else {
                     System.exit(1);
                 }
                 if (args[2].equals("--script")) {
@@ -53,7 +58,11 @@ public class Emulator {
         System.out.println("VFS path: " + pathVFS);
         System.out.println("StartScript path: " + pathStartScript);
 
-        if (pathStartScript != null){
+        if (pathVFS != null){
+            loadVFS(pathVFS);
+        }
+
+        if (pathStartScript != null) {
             executeScript(pathStartScript);
         }
         //приветственное меню
@@ -89,12 +98,12 @@ public class Emulator {
             String command = commandParts.get(0);
             List<String> commandArgs = commandParts.subList(1, commandParts.size());
             //вывод выбранной команды и аргументов к ней
-            switch (command){
+            switch (command) {
                 case "ls":
                     System.out.println("ls " + String.join(" ", commandArgs));
                     break;
                 case "cd":
-                    System.out.println("cd " + String.join(" ",commandArgs));
+                    System.out.println("cd " + String.join(" ", commandArgs));
                     break;
                 case "exit":
                     System.out.println("Exiting...");

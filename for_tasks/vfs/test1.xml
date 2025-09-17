@@ -1,0 +1,5 @@
+<root>
+  <dir name="home">
+    <file name="file.txt">SGVsbG8gd29ybGQ=<!-- base64 для "Hello world" --></file>
+  </dir>
+</root>
