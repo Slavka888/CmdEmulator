@@ -18,7 +18,7 @@ public class Emulator {
     static String pathVFS;
     static String pathStartScript;
     static VFSNode root = new VFSNode();
-
+    static String currentPath = "/";
     public static void main(String[] args) {
         //обрабатываем аргументы командной строки
         switch (args.length) {
@@ -101,9 +101,23 @@ public class Emulator {
             switch (command) {
                 case "ls":
                     System.out.println("ls " + String.join(" ", commandArgs));
+                    doCommandL(commandArgs);
                     break;
                 case "cd":
                     System.out.println("cd " + String.join(" ", commandArgs));
+                    doCommandCd(commandArgs);
+                    break;
+                case "du":
+                    System.out.println("du " + String.join(" ", commandArgs));
+                    doCommandDu(commandArgs);
+                    break;
+                case "uname":
+                    System.out.println("uname " + String.join(" ", commandArgs));
+                    doCommandUname();
+                    break;
+                case "pwd":
+                    System.out.println("pwd " + String.join(" ", commandArgs));
+                    doCommandPwd();
                     break;
                 case "exit":
                     System.out.println("Exiting...");

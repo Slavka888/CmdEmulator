@@ -7,8 +7,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static Stages.Emulator.root;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Scanner;
+
+import static Stages.Emulator.*;
 
 public class Methods {
 
@@ -126,5 +126,98 @@ public class Methods {
                 }
             }
         }
+    }
+
+    //метод для выполнения команды ls
+    static void doCommandL(List<String> commandArgs){
+        VFSNode current = getNodeByPath(currentPath);
+        if (current == null || !current.isDirectory){
+            System.out.println("Is's not a directory");
+            return;
+        }
+        for (String child : current.children.keySet()){
+            System.out.println(child);
+        }
+    }
+
+    static void doCommandCd(List<String> commandArgs){
+        if (commandArgs.isEmpty()){
+            currentPath = "/";
+            System.out.println(currentPath);
+            return;
+        }
+        String newPath = setPath(commandArgs.get(0));
+        VFSNode newNode = getNodeByPath(newPath);
+        if (newNode!=null && newNode.isDirectory){
+            currentPath = newPath;
+            System.out.println(currentPath);
+        }
+        else{
+            System.out.println("No such directory");
+        }
+    }
+
+    static void doCommandDu(List<String> commandArgs){
+        String path;
+        if (commandArgs.isEmpty()){
+            path = currentPath;
+        }
+        else {
+            path = setPath(commandArgs.get(0));
+        }
+        VFSNode newNode = getNodeByPath(path);
+        if (newNode == null){
+            System.out.println("No such file or directory");
+            return;
+        }
+        long size = calculateSize(newNode);
+        System.out.println(size);
+    }
+
+    static void doCommandUname(){
+        System.out.println("Linux emulated");
+    }
+
+    static void doCommandPwd(){
+        System.out.println(currentPath);
+    }
+
+    static VFSNode getNodeByPath(String path){
+        VFSNode current = root;
+        String[] parts = path.split("/");
+        for (String part : parts){
+            if (part.isEmpty() || part.equals(".")){
+                continue;
+            }
+            if (part.equals("..")){
+                continue;
+            }
+            current = current.children.get(part);
+            if (current == null){
+                return null;
+            }
+        }
+        return current;
+    }
+
+    static String setPath(String path){
+        if (path.equals("..")){
+            return currentPath.substring(0, currentPath.lastIndexOf("/"));
+        }
+        if (path.startsWith("/")){
+            return path;
+        }
+        return currentPath + (currentPath.endsWith("/")? "" : "/") + path;
+    }
+
+    static long calculateSize(VFSNode node){
+        if (!node.isDirectory){
+            return node.content != null ? node.content.length : 0;
+        }
+        long size = 0;
+        for (VFSNode child : node.children.values()){
+            size+= calculateSize(child);
+        }
+        return size;
     }
 }
