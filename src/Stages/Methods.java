@@ -77,10 +77,7 @@ public class Methods {
                 }
                 String command = commandParts.get(0);
                 List<String> commandArgs = commandParts.subList(1, commandParts.size());
-                System.out.println(command + " " + String.join(" ", commandArgs));
-                if (command.toLowerCase().equals("exit")) {
-                    System.exit(0);
-                }
+                makeAction(command, commandArgs);
             }
         } catch (IOException e) {
             System.out.println("Can't read script: " + e.getMessage());
@@ -182,6 +179,55 @@ public class Methods {
         System.out.println(currentPath);
     }
 
+    static void doCommandMkdir(List<String> commandArgs){
+        if (commandArgs.isEmpty()){
+            System.out.println("Can't create directory");
+            return;
+        }
+        String dirPath =setPath(commandArgs.get(0));
+        String[] parts = dirPath.split("/");
+        VFSNode current = root;
+        for (int i = 1; i< parts.length; i++){
+            String part = parts[i];
+            if(!current.children.containsKey(part)){
+                VFSNode newDir = new VFSNode();
+                newDir.name = part;
+                newDir.isDirectory = true;
+                current.children.put(part, newDir);
+            }
+            current = current.children.get(part);
+            if (!current.isDirectory){
+                System.out.println("Not a directory");
+                return;
+            }
+        }
+    }
+
+    static void doCommandRmdir(List<String> commandArgs){
+        if (commandArgs.isEmpty()){
+            System.out.println("No directory name");
+            return;
+        }
+        String path = setPath(commandArgs.get(0));
+        String[] parts = path.split("/");
+        VFSNode node = root;
+        for (int i = 1; i < parts.length-1; i++){
+            node = node.children.get(parts[i]);
+            if (node == null || !node.isDirectory){
+                System.out.println("No directory");
+                return;
+            }
+        }
+        String dirName = parts[parts.length -1];
+        VFSNode dir = node.children.get(dirName);
+        if (dir!= null && dir.isDirectory && dir.children.isEmpty()){
+            node.children.remove(dirName);
+        }
+        else {
+            System.out.println("Can't remove directory");
+        }
+    }
+
     static VFSNode getNodeByPath(String path){
         VFSNode current = root;
         String[] parts = path.split("/");
@@ -219,5 +265,45 @@ public class Methods {
             size+= calculateSize(child);
         }
         return size;
+    }
+
+    static void makeAction(String command, List<String> commandArgs){
+        switch (command) {
+            case "ls":
+                System.out.println("ls " + String.join(" ", commandArgs));
+                doCommandL(commandArgs);
+                break;
+            case "cd":
+                System.out.println("cd " + String.join(" ", commandArgs));
+                doCommandCd(commandArgs);
+                break;
+            case "du":
+                System.out.println("du " + String.join(" ", commandArgs));
+                doCommandDu(commandArgs);
+                break;
+            case "uname":
+                System.out.println("uname " + String.join(" ", commandArgs));
+                doCommandUname();
+                break;
+            case "pwd":
+                System.out.println("pwd " + String.join(" ", commandArgs));
+                doCommandPwd();
+                break;
+            case "mkdir":
+                System.out.println("mkdir " + String.join(" ", commandArgs));
+                doCommandMkdir(commandArgs);
+                break;
+            case "rmdir":
+                System.out.println("rmdir " + String.join(" ", commandArgs));
+                doCommandRmdir(commandArgs);
+                break;
+            case "exit":
+                System.out.println("Exiting...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Unknown command");
+                break;
+        }
     }
 }

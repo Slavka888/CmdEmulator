@@ -1,0 +1,15 @@
+mkdir newdir
+mkdir /var/newdeepdir
+mkdir
+ls  // Проверить создание
+rmdir newdir
+rmdir nonexistent
+rmdir /var/log
+rmdir
+cd /var
+pwd
+ls
+du
+mkdir temp
+rmdir temp
+exit
